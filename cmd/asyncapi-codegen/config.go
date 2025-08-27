@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/codegen/options"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/options"
 	"github.com/spf13/cobra"
 )
 
-var (
-	// ErrInvalidGenerate happens when using an invalid generation argument.
-	ErrInvalidGenerate = errors.New("invalid generate argument")
-)
+// ErrInvalidGenerate happens when using an invalid generation argument.
+var ErrInvalidGenerate = errors.New("invalid generate argument")
 
 // Flags contains all command line flags.
 type Flags struct {

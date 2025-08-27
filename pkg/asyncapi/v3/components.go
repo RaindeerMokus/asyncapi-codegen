@@ -25,6 +25,8 @@ type Components struct {
 	ChannelBindings   map[string]*ChannelBindings       `json:"channelBindings"`
 	OperationBindings map[string]*OperationBindings     `json:"operationBindings"`
 	MessageBindings   map[string]*MessageBindings       `json:"messageBindings"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 }

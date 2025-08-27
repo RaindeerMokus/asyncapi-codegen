@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
 )
 
 // Check that it still fills the interface.
@@ -14,10 +14,8 @@ var _ extensions.BrokerController = (*Wrapper)(nil)
 // DefaultVersionHeaderKey is the field that will be added to a message to get the version.
 const DefaultVersionHeaderKey = "application-version"
 
-var (
-	// ErrNoVersion happens when there is no version in the context or the message.
-	ErrNoVersion = fmt.Errorf("%w: no version present", extensions.ErrAsyncAPI)
-)
+// ErrNoVersion happens when there is no version in the context or the message.
+var ErrNoVersion = fmt.Errorf("%w: no version present", extensions.ErrAsyncAPI)
 
 // Wrapper allows to use multiple version of the same App/User Controllers
 // on one Broker Controller in order to handle migrations.

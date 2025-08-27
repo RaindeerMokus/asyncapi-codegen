@@ -3,8 +3,8 @@ package asyncapiv2
 import (
 	"testing"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/asyncapi"
-	"github.com/lerenn/asyncapi-codegen/pkg/utils"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/utils"
 	"github.com/stretchr/testify/suite"
 )
 

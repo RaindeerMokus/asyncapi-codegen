@@ -3,7 +3,7 @@ package asyncapiv3
 import (
 	"fmt"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
 )
 
 const (
@@ -11,10 +11,8 @@ const (
 	ChannelSuffix = "Channel"
 )
 
-var (
-	// ErrNoMessageInChannel is the error returned when there is no message in a channel.
-	ErrNoMessageInChannel = fmt.Errorf("%w: no message in channel", extensions.ErrAsyncAPI)
-)
+// ErrNoMessageInChannel is the error returned when there is no message in a channel.
+var ErrNoMessageInChannel = fmt.Errorf("%w: no message in channel", extensions.ErrAsyncAPI)
 
 // Channel is a representation of the corresponding asyncapi object filled
 // from an asyncapi specification that will be used to generate code.
@@ -33,6 +31,8 @@ type Channel struct {
 	ExternalDocs *ExternalDocumentation `json:"externalDocs"`
 	Bindings     *ChannelBindings       `json:"bindings"`
 	Reference    string                 `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

@@ -8,11 +8,11 @@ import (
 	"reflect"
 	"strconv"
 
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi"
+	asyncapiv2 "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v2"
+	asyncapiv3 "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v3"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
 	"github.com/ghodss/yaml"
-	"github.com/lerenn/asyncapi-codegen/pkg/asyncapi"
-	asyncapiv2 "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v2"
-	asyncapiv3 "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v3"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
 )
 
 var (
@@ -135,7 +135,6 @@ func FromJSON(params FromJSONParams) (asyncapi.Specification, error) {
 	if err := json.Unmarshal(params.Data, &spec); err != nil {
 		return nil, err
 	}
-
 	return spec, nil
 }
 

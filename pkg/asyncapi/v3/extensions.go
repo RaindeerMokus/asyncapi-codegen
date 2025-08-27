@@ -16,7 +16,8 @@ type Extensions struct {
 
 	// Controls whether to include omitempty in JSON tags
 	// If false, omitempty will be removed from JSON tags even if the field can be null
-	ExtOmitEmpty *bool `json:"x-omitempty"`
+	ExtOmitEmpty      *bool      `json:"x-omitempty"`
+	ExtNatsResponseTo *Operation `json:"x-nats-reply-to"`
 }
 
 // GoTypeImportExtension specifies the required import statement

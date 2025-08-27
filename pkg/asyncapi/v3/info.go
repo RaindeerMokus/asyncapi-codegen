@@ -14,6 +14,8 @@ type Info struct {
 	License        *License               `json:"license"`
 	Tags           []*Tag                 `json:"tags"`
 	ExternalDocs   *ExternalDocumentation `json:"externalDocs"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 }

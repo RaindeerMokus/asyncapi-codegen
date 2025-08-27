@@ -5,11 +5,11 @@ package main
 import (
 	"context"
 
-	"github.com/lerenn/asyncapi-codegen/examples"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions/brokers/nats"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions/loggers"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions/middlewares"
-	testutil "github.com/lerenn/asyncapi-codegen/pkg/utils/test"
+	"github.com/RaindeerMokus/asyncapi-codegen/examples"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions/brokers/nats"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions/loggers"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions/middlewares"
+	testutil "github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/test"
 )
 
 var _ AppSubscriber = (*Subscriber)(nil)
@@ -25,7 +25,6 @@ func (s Subscriber) PingRequestOperationReceived(ctx context.Context, ping PingM
 		// Reply with the same event than the ping
 		pong.Payload.Event = ping.Payload.Event
 	})
-
 	// Error management
 	if err != nil {
 		panic(err)
