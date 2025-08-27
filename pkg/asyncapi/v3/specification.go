@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/asyncapi"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
 )
 
 const (
@@ -14,10 +14,8 @@ const (
 	MajorVersion = 3
 )
 
-var (
-	// ErrInvalidReference is sent when a reference is invalid.
-	ErrInvalidReference = fmt.Errorf("%w: invalid reference", extensions.ErrAsyncAPI)
-)
+// ErrInvalidReference is sent when a reference is invalid.
+var ErrInvalidReference = fmt.Errorf("%w: invalid reference", extensions.ErrAsyncAPI)
 
 // Specification is the asyncapi specification struct that will be used to generate
 // code. It should contains every information given in the asyncapi specification.

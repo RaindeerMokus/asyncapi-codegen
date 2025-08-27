@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions/brokers"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions/brokers"
 	"github.com/nats-io/nats.go"
 )
 
@@ -153,15 +153,12 @@ func (c *Controller) Close() {
 var _ extensions.BrokerAcknowledgment = (*NoopAcknowledgementHandler)(nil)
 
 // NoopAcknowledgementHandler for nats broker, core NATS do not support ack/nak messages.
-type NoopAcknowledgementHandler struct {
-}
+type NoopAcknowledgementHandler struct{}
 
 // AckMessage acknowledges the message.
 func (k NoopAcknowledgementHandler) AckMessage() {
-
 }
 
 // NakMessage negatively acknowledges the message.
 func (k NoopAcknowledgementHandler) NakMessage() {
-
 }

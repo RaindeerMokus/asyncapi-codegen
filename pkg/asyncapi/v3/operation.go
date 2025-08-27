@@ -1,5 +1,7 @@
 package asyncapiv3
 
+import "encoding/json"
+
 // OperationAction represents an OperationAction.
 type OperationAction string
 
@@ -39,6 +41,8 @@ type Operation struct {
 	Messages     []*Message             `json:"messages"` // References only
 	Reply        *OperationReply        `json:"reply"`
 	Reference    string                 `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions map[string]*json.RawMessage `json:",inline,omitempty"`
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

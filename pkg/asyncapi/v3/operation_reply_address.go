@@ -1,6 +1,7 @@
 package asyncapiv3
 
 import (
+	"encoding/json"
 	"strings"
 )
 
@@ -13,6 +14,8 @@ type OperationReplyAddress struct {
 	Description string `json:"description"`
 	Location    string `json:"location"`
 	Reference   string `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions map[string]*json.RawMessage `json:",inline,omitempty"`
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

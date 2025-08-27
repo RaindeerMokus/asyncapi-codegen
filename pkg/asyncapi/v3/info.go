@@ -1,5 +1,7 @@
 package asyncapiv3
 
+import "encoding/json"
+
 // Info is a representation of the corresponding asyncapi object filled
 // from an asyncapi specification that will be used to generate code.
 // Source: https://www.asyncapi.com/docs/reference/specification/v3.0.0#infoObject
@@ -14,6 +16,8 @@ type Info struct {
 	License        *License               `json:"license"`
 	Tags           []*Tag                 `json:"tags"`
 	ExternalDocs   *ExternalDocumentation `json:"externalDocs"`
+	// Extensibility (for x-* custom fields)
+	Extensions map[string]*json.RawMessage `json:",inline,omitempty"`
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 }

@@ -1,12 +1,13 @@
 package main
 
 import (
-	"asyncapi-codegen/ci/dagger/internal/dagger"
 	"context"
+
+	"asyncapi-codegen/ci/dagger/internal/dagger"
 )
 
 func sourceCodeAndGoCache(dir *dagger.Directory) func(r *dagger.Container) *dagger.Container {
-	sourceCodeMountPath := "/go/src/github.com/lerenn/asyncapi-codegen"
+	sourceCodeMountPath := "/go/src/github.com/RaindeerMokus/asyncapi-codegen"
 	return func(r *dagger.Container) *dagger.Container {
 		return r.
 			WithMountedCache("/root/.cache/go-build", dag.CacheVolume("gobuild")).

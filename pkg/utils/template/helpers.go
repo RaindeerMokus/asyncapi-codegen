@@ -25,8 +25,10 @@ var namifyPerScheme = map[string]namingSchemeFn{
 	"none":  DefaultNamifier,
 }
 
-var convertKey = convertKeyFuncs["none"]
-var namify = namifyPerScheme["none"]
+var (
+	convertKey = convertKeyFuncs["none"]
+	namify     = namifyPerScheme["none"]
+)
 
 // NamifyWithoutParams will convert a sentence to a golang conventional type name.
 // and will remove all parameters that can appear between '{' and '}'.
@@ -144,6 +146,13 @@ func CutSuffix(s, suffix string) string {
 	return s
 }
 
+// CutPrefix is a function used to remove a prefix to a string.
+func CutPrefix(s, prefix string) string {
+	s, _ = strings.CutPrefix(s, prefix)
+	s, _ = strings.CutPrefix(s, "_"+prefix)
+	return s
+}
+
 var isDateOrDateTimeGenerated = func(format string) bool {
 	return format == "date" || format == "date-time"
 }
@@ -166,6 +175,7 @@ func HelpersFunctions() template.FuncMap {
 		"describeStruct":            DescribeStruct,
 		"multiLineComment":          MultiLineComment,
 		"cutSuffix":                 CutSuffix,
+		"cutPrefix":                 CutPrefix,
 		"args":                      Args,
 	}
 }

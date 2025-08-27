@@ -132,6 +132,8 @@ func (c *{{ .Prefix }}Controller) UnsubscribeFromAllChannels(ctx context.Context
 {{- end}}
 
 {{range $key, $value := .Operations.Receive -}}
+
+// ###: {{$value.Extensions}}
 // SubscribeTo{{ namify $value.Follow.Name }} will receive {{ cutSuffix (opToMsgTypeName $value) "Message" }} messages from {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
 //
 // Callback function 'fn' will be called each time a new message is received.
@@ -145,7 +147,7 @@ func (c *{{ $.Prefix }}Controller) SubscribeTo{{ namify $value.Follow.Name }}(
     {{- if .Channel.Follow.Parameters}}
     params {{namifyWithoutParam $value.Channel.Follow.Name}}Parameters,
     {{- end}}
-    fn func (ctx context.Context, msg {{opToMsgTypeName $value}}) error,
+    fn func (ctx context.Context, msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message) error,
 ) error {
     // Get channel address
     addr := {{ generateChannelAddrFromOp $value }}
@@ -195,7 +197,7 @@ func (c *{{ $.Prefix }}Controller) SubscribeTo{{ namify $value.Follow.Name }}(
 func (c *{{ $.Prefix }}Controller) listenTo{{ namify $value.Follow.Name }}NextMessage(
     addr string,
     sub extensions.BrokerChannelSubscription,
-    fn func(ctx context.Context, msg {{opToMsgTypeName $value}}) error,
+    fn func(ctx context.Context, msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message) error,
 ) (stop bool, err error) {
     // Create a context for the received response
     msgCtx, cancel := context.WithCancel(context.Background())
@@ -218,7 +220,8 @@ func (c *{{ $.Prefix }}Controller) listenTo{{ namify $value.Follow.Name }}NextMe
     // Execute middlewares before handling the message
     if err := c.executeMiddlewares(msgCtx, &acknowledgeableBrokerMessage.BrokerMessage, func(middlewareCtx context.Context) error {
         // Process message
-        msg, err := brokerMessageTo{{opToMsgTypeName $value}}(acknowledgeableBrokerMessage.BrokerMessage)
+        // msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message
+        msg, err := brokerMessageTo{{onlyLastRefPart (index $value.Messages 0).Reference}}Message(acknowledgeableBrokerMessage.BrokerMessage)
         if err != nil {
             return err
         }
@@ -313,14 +316,14 @@ func (c *{{ $.Prefix }}Controller) UnsubscribeFrom{{ namify $value.Follow.Name }
 
 {{- range  $key, $value := .Operations.Send}}
 
-// Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }} will send a {{ cutSuffix (opToMsgTypeName $value) "Message" }} message on {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
+// Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }} will send a {{onlyLastRefPart (index $value.Messages 0).Reference}}Message message on {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
 //
 {{- if .Reply}}
 // NOTE: this won't wait for reply, use the normal version to get the reply or do the catching reply manually.
 {{- end}}
 // NOTE: for now, this only support the first message from AsyncAPI list.
-// If you need support for other messages, please raise an issue.
-func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }}(
+// If you need support for other messages, please raise an issue.   {{onlyLastRefPart (index $value.Messages 0).Reference}}Message
+func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{onlyLastRefPart (index $value.Messages 0).Reference}}Message(
     ctx context.Context,
     {{- if .Channel.Follow.Parameters }}
         params {{namifyWithoutParam $value.Channel.Follow.Name}}Parameters,
@@ -328,7 +331,7 @@ func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{
     {{- if eq .Channel.Follow.Address "" }}
         chanAddr string,
     {{- end}}
-    msg {{opToMsgTypeName $value}},
+    msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message,
 ) error {
     // Set channel address
     {{- if eq .Channel.Follow.Address "" }}

@@ -6,8 +6,8 @@ package requestreply
 import (
 	"context"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
-	"github.com/lerenn/asyncapi-codegen/pkg/utils"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/utils"
 	"github.com/stretchr/testify/suite"
 )
 

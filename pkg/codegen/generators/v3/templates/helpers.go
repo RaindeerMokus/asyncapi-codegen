@@ -6,10 +6,10 @@ import (
 	"strings"
 	"text/template"
 
-	asyncapi "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v3"
-	"github.com/lerenn/asyncapi-codegen/pkg/codegen/generators"
-	"github.com/lerenn/asyncapi-codegen/pkg/utils"
-	templateutil "github.com/lerenn/asyncapi-codegen/pkg/utils/template"
+	asyncapi "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v3"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/utils"
+	templateutil "github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/template"
 )
 
 // GetChildrenObjectSchemas will return all the children object schemas of a
@@ -138,6 +138,14 @@ func ForcePointerOnFields() {
 	}
 }
 
+func OnlyLastRefPart(ref string) string {
+	split := strings.Split(ref, "/")
+	if len(split) <= 0 {
+		return ""
+	}
+	return split[len(split)-1]
+}
+
 // HelpersFunctions returns the functions that can be used as helpers
 // in a golang template.
 func HelpersFunctions() template.FuncMap {
@@ -153,5 +161,6 @@ func HelpersFunctions() template.FuncMap {
 		"referenceToStructAttributePath": ReferenceToStructAttributePath,
 		"generateValidateTags":           generators.GenerateValidateTags[asyncapi.Schema],
 		"generateJSONTags":               generators.GenerateJSONTags[asyncapi.Schema],
+		"onlyLastRefPart":                OnlyLastRefPart,
 	}
 }

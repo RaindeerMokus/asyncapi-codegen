@@ -6,8 +6,8 @@ import (
 	"path"
 	"text/template"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/codegen/generators/v2/templates"
-	templateutil "github.com/lerenn/asyncapi-codegen/pkg/utils/template"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators/v2/templates"
+	templateutil "github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/template"
 )
 
 const (
@@ -27,10 +27,8 @@ const (
 	marshalingTimeTemplatePath                 = marshalingTemplatesDir + "/time.tmpl"
 )
 
-var (
-	//go:embed templates/*
-	files embed.FS
-)
+//go:embed templates/*
+var files embed.FS
 
 func loadTemplate(paths ...string) (*template.Template, error) {
 	funcs := templateutil.HelpersFunctions()

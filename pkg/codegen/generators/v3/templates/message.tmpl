@@ -2,12 +2,30 @@
 
 {{if $.Reference }}
 
-// Message '{{namify .Name}}' reference another one at '{{$.Reference}}'.
+// Message '{{namify .Name}}' reference another one at '{{$.Reference}}' BaQ.
 // This should be fixed in a future version to allow message override.
 // If you encounter this message, feel free to open an issue on this subject
 // to let know that you need this functionnality.
 
+/* type {{namify .Name}} struct {
+    {{cutPrefix (namify $.Reference) "ComponentsMessages"}}Message
+}
+
+
+// brokerMessageTo{{namify .Name}} will fill a new {{namify .Name}} with data from generic broker message
+func brokerMessageTo{{namify .Name}}(bMsg extensions.BrokerMessage) ({{namify .Name}}, error) {
+    msg, err := brokerMessageTo{{cutPrefix (namify $.Reference) "ComponentsMessages"}}Message(bMsg)
+    if err != nil {
+        panic(err)
+    }
+    // TODO: run checks on msg type
+
+    return {{namify .Name}}{msg}, nil
+} */
+
 {{else}}
+
+{{- /* ############################################################################################################### */}}
 
 {{- if and .Headers (not .Headers.ReferenceTo) }}
 {{template "schema-definition" .Headers}}
