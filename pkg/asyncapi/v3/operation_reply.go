@@ -10,6 +10,8 @@ type OperationReply struct {
 	Channel   *Channel               `json:"channel"`  // Reference only
 	Messages  []*Message             `json:"messages"` // References only
 	Reference string                 `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

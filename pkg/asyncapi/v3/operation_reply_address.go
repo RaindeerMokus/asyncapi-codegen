@@ -13,6 +13,8 @@ type OperationReplyAddress struct {
 	Description string `json:"description"`
 	Location    string `json:"location"`
 	Reference   string `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

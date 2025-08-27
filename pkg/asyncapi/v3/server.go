@@ -19,6 +19,8 @@ type Server struct {
 	ExternalDocs    *ExternalDocumentation     `json:"externalDocs"`
 	Bindings        *ServerBindings            `json:"bindings"`
 	Reference       string                     `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions"
-	"github.com/lerenn/asyncapi-codegen/pkg/extensions/brokers"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/extensions/brokers"
 	"github.com/nats-io/nats.go"
 )
 
@@ -84,15 +84,21 @@ func WithConnectionOpts(opts ...nats.Option) ControllerOption {
 // Publish a message to the broker.
 func (c *Controller) Publish(_ context.Context, channel string, bm extensions.BrokerMessage) error {
 	msg := nats.NewMsg(channel)
+	pubFn := c.connection.PublishMsg
 
 	// Set message headers and content
 	for k, v := range bm.Headers {
+		if k == "RESPOND_SUBJECT" {
+			msg.Reply = string(v)
+			pubFn = msg.RespondMsg
+			continue
+		}
 		msg.Header.Set(k, string(v))
 	}
 	msg.Data = bm.Payload
 
 	// Publish message
-	if err := c.connection.PublishMsg(msg); err != nil {
+	if err := pubFn(msg); err != nil {
 		return err
 	}
 
@@ -153,15 +159,12 @@ func (c *Controller) Close() {
 var _ extensions.BrokerAcknowledgment = (*NoopAcknowledgementHandler)(nil)
 
 // NoopAcknowledgementHandler for nats broker, core NATS do not support ack/nak messages.
-type NoopAcknowledgementHandler struct {
-}
+type NoopAcknowledgementHandler struct{}
 
 // AckMessage acknowledges the message.
 func (k NoopAcknowledgementHandler) AckMessage() {
-
 }
 
 // NakMessage negatively acknowledges the message.
 func (k NoopAcknowledgementHandler) NakMessage() {
-
 }

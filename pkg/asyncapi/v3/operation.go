@@ -39,6 +39,8 @@ type Operation struct {
 	Messages     []*Message             `json:"messages"` // References only
 	Reply        *OperationReply        `json:"reply"`
 	Reference    string                 `json:"$ref"`
+	// Extensibility (for x-* custom fields)
+	Extensions
 
 	// --- Non AsyncAPI fields -------------------------------------------------
 

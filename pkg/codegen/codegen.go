@@ -5,16 +5,16 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/lerenn/asyncapi-codegen/pkg/asyncapi"
-	"github.com/lerenn/asyncapi-codegen/pkg/asyncapi/parser"
-	asyncapiv2 "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v2"
-	asyncapiv3 "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v3"
-	generatorv2 "github.com/lerenn/asyncapi-codegen/pkg/codegen/generators/v2"
-	templatesv2 "github.com/lerenn/asyncapi-codegen/pkg/codegen/generators/v2/templates"
-	generatorv3 "github.com/lerenn/asyncapi-codegen/pkg/codegen/generators/v3"
-	templatesv3 "github.com/lerenn/asyncapi-codegen/pkg/codegen/generators/v3/templates"
-	"github.com/lerenn/asyncapi-codegen/pkg/codegen/options"
-	"github.com/lerenn/asyncapi-codegen/pkg/utils/template"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/parser"
+	asyncapiv2 "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v2"
+	asyncapiv3 "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v3"
+	generatorv2 "github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators/v2"
+	templatesv2 "github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators/v2/templates"
+	generatorv3 "github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators/v3"
+	templatesv3 "github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators/v3/templates"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/options"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/template"
 	"golang.org/x/tools/imports"
 )
 
@@ -126,7 +126,7 @@ func (cg CodeGen) Generate(opt options.Options) error {
 	}
 
 	// Write to file
-	return os.WriteFile(opt.OutputPath, fileContent, 0644)
+	return os.WriteFile(opt.OutputPath, fileContent, 0o644)
 }
 
 func (cg CodeGen) generateContent(opt options.Options) (string, error) {

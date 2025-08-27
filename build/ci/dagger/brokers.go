@@ -1,10 +1,11 @@
 package main
 
 import (
-	"asyncapi-codegen/ci/dagger/internal/dagger"
 	"fmt"
 
-	testutil "github.com/lerenn/asyncapi-codegen/pkg/utils/test"
+	"asyncapi-codegen/ci/dagger/internal/dagger"
+
+	testutil "github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/test"
 )
 
 const (
@@ -210,7 +211,8 @@ func brokerNATSSecureBasicAuth() *dagger.Container {
 			"--tlscert=/tls/server-cert.pem",
 			"--tlskey=/tls/server-key.pem",
 			"--user", "user",
-			"--pass", "password"})
+			"--pass", "password",
+		})
 }
 
 // brokerNATSJetstream returns a container for the NATS broker.

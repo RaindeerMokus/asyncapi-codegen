@@ -132,6 +132,8 @@ func (c *{{ .Prefix }}Controller) UnsubscribeFromAllChannels(ctx context.Context
 {{- end}}
 
 {{range $key, $value := .Operations.Receive -}}
+
+// ###: {{$value.Extensions}}
 // SubscribeTo{{ namify $value.Follow.Name }} will receive {{ cutSuffix (opToMsgTypeName $value) "Message" }} messages from {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
 //
 // Callback function 'fn' will be called each time a new message is received.
@@ -145,7 +147,7 @@ func (c *{{ $.Prefix }}Controller) SubscribeTo{{ namify $value.Follow.Name }}(
     {{- if .Channel.Follow.Parameters}}
     params {{namifyWithoutParam $value.Channel.Follow.Name}}Parameters,
     {{- end}}
-    fn func (ctx context.Context, msg {{opToMsgTypeName $value}}) error,
+    fn func (ctx context.Context, msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message) error,
 ) error {
     // Get channel address
     addr := {{ generateChannelAddrFromOp $value }}
@@ -195,7 +197,7 @@ func (c *{{ $.Prefix }}Controller) SubscribeTo{{ namify $value.Follow.Name }}(
 func (c *{{ $.Prefix }}Controller) listenTo{{ namify $value.Follow.Name }}NextMessage(
     addr string,
     sub extensions.BrokerChannelSubscription,
-    fn func(ctx context.Context, msg {{opToMsgTypeName $value}}) error,
+    fn func(ctx context.Context, msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message) error,
 ) (stop bool, err error) {
     // Create a context for the received response
     msgCtx, cancel := context.WithCancel(context.Background())
@@ -218,7 +220,8 @@ func (c *{{ $.Prefix }}Controller) listenTo{{ namify $value.Follow.Name }}NextMe
     // Execute middlewares before handling the message
     if err := c.executeMiddlewares(msgCtx, &acknowledgeableBrokerMessage.BrokerMessage, func(middlewareCtx context.Context) error {
         // Process message
-        msg, err := brokerMessageTo{{opToMsgTypeName $value}}(acknowledgeableBrokerMessage.BrokerMessage)
+        // msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message
+        msg, err := brokerMessageTo{{onlyLastRefPart (index $value.Messages 0).Reference}}Message(acknowledgeableBrokerMessage.BrokerMessage)
         if err != nil {
             return err
         }
@@ -250,17 +253,17 @@ func (c *{{ $.Prefix }}Controller) listenTo{{ namify $value.Follow.Name }}NextMe
 
 {{- if .Reply }}
 // ReplyTo{{ namify $value.Follow.Name }} is a helper function to
-// reply to a {{cutSuffix (opToMsgTypeName $value) "Message"}} message with a {{cutSuffix (opToMsgTypeName $value.ReplyIs) "Message"}} message on {{cutSuffix (opToChannelTypeName $value.ReplyIs) "Channel"}} channel.
-func (c *{{ $.Prefix }}Controller) ReplyTo{{ namify $value.Follow.Name }}(ctx context.Context, recvMsg {{opToMsgTypeName $value}}, fn func(replyMsg *{{opToMsgTypeName $value.ReplyIs}})) error {
+/*  reply to a {{onlyLastRefPart (index $value.Reply.Messages 0).Reference}}Message message on {{cutSuffix (opToChannelTypeName $value.ReplyIs) "Channel"}} channel.*/
+func (c *{{ $.Prefix }}Controller) ReplyTo{{ namify $value.Follow.Name }}(ctx context.Context, recvMsg {{opToMsgTypeName $value.ReplyIs}}, fn func(replyMsg *{{onlyLastRefPart (index $value.Reply.Messages 0).Reference}}Message)) error {
     // Create reply message
-    replyMsg := New{{opToMsgTypeName $value.ReplyIs }}()
+    replyMsg := New{{onlyLastRefPart (index $value.Reply.Messages 0).Reference}}Message()
     {{if $value.GetMessage.HaveCorrelationID -}}
 	replyMsg.SetAsResponseFrom(&recvMsg)
     {{- end}}
 
     // Execute callback function 
     fn(&replyMsg)
-
+    recvAddr := {{ generateChannelAddrFromOp $value }}
     // Publish reply
     {{- /* Use reply address if needed */}}
     {{- if and .Reply.Address (eq .Reply.Channel.Address "") }}
@@ -275,7 +278,7 @@ func (c *{{ $.Prefix }}Controller) ReplyTo{{ namify $value.Follow.Name }}(ctx co
 
         return c.Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}ReplyTo{{ namify $value.Follow.Name }}(ctx, chanAddr, replyMsg)
     {{- else }}
-        return c.Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}ReplyTo{{ namify $value.Follow.Name }}(ctx, replyMsg)
+        return c.Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}ReplyTo{{ namify $value.Follow.Name }}(ctx, replyMsg, recvAddr)
     {{- end }}
 }
 
@@ -313,14 +316,14 @@ func (c *{{ $.Prefix }}Controller) UnsubscribeFrom{{ namify $value.Follow.Name }
 
 {{- range  $key, $value := .Operations.Send}}
 
-// Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }} will send a {{ cutSuffix (opToMsgTypeName $value) "Message" }} message on {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
-//
-{{- if .Reply}}
-// NOTE: this won't wait for reply, use the normal version to get the reply or do the catching reply manually.
-{{- end}}
-// NOTE: for now, this only support the first message from AsyncAPI list.
-// If you need support for other messages, please raise an issue.
+// Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }} will send a {{/*onlyLastRefPart (index $value.Messages 0).Reference*/}}Message message on {{ cutSuffix (opToChannelTypeName $value) "Channel" }} channel.
+{{- if $value.Messages }}
+// If you need support for other messages, please raise an issue.   {{onlyLastRefPart (index $value.Messages 0).Reference}}Message
+func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{onlyLastRefPart (index $value.Messages 0).Reference}}Message(
+{{- else }}
+// If you need support for other messages, please raise an issue.   Message
 func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{end}}{{ namify $value.Follow.Name }}(
+{{- end}}
     ctx context.Context,
     {{- if .Channel.Follow.Parameters }}
         params {{namifyWithoutParam $value.Channel.Follow.Name}}Parameters,
@@ -328,7 +331,12 @@ func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{
     {{- if eq .Channel.Follow.Address "" }}
         chanAddr string,
     {{- end}}
-    msg {{opToMsgTypeName $value}},
+    {{- if $value.Messages }}
+    msg {{onlyLastRefPart (index $value.Messages 0).Reference}}Message,
+    {{- else if $value.ReplyOf}}
+    msg {{onlyLastRefPart (index $value.ReplyOf.Reply.Messages 0).Reference}}Message,
+    recvAddr string,
+    {{- end}}
 ) error {
     // Set channel address
     {{- if eq .Channel.Follow.Address "" }}
@@ -361,7 +369,9 @@ func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{
     if err != nil  {
         return err
     }
-
+    {{- if $value.ReplyOf}}
+    brokerMsg.Headers["RESPOND_SUBJECT"] = []byte(recvAddr)
+    {{- end}}
     // Set broker message to context
     ctx = context.WithValue(ctx, extensions.ContextKeyIsBrokerMessage, brokerMsg.String())
 
@@ -370,7 +380,6 @@ func (c *{{ $.Prefix }}Controller) Send{{ if eq $.Prefix "User" }}To{{else}}As{{
         return c.broker.Publish(ctx, addr, brokerMsg)
     })
 }
-
 
 {{if .Reply -}}
 

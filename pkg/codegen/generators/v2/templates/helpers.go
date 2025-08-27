@@ -6,10 +6,10 @@ import (
 	"strings"
 	"text/template"
 
-	asyncapi "github.com/lerenn/asyncapi-codegen/pkg/asyncapi/v2"
-	"github.com/lerenn/asyncapi-codegen/pkg/codegen/generators"
-	"github.com/lerenn/asyncapi-codegen/pkg/utils"
-	templateutil "github.com/lerenn/asyncapi-codegen/pkg/utils/template"
+	asyncapi "github.com/RaindeerMokus/asyncapi-codegen/pkg/asyncapi/v2"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/codegen/generators"
+	"github.com/RaindeerMokus/asyncapi-codegen/pkg/utils"
+	templateutil "github.com/RaindeerMokus/asyncapi-codegen/pkg/utils/template"
 )
 
 // GetChildrenObjectSchemas will return all the children object schemas of a
